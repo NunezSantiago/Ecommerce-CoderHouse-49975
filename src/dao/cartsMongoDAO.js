@@ -22,30 +22,10 @@ export class cartsMongoDAO{
         }
     }
 
-    // Returns cart with provided cartID - deprecated
-    // async getByCartID(cid){
-    //     try {
-    //         return await cartsModel.findOne({cartID: cid, isDeleted: false}).populate('products.product').lean()
-    //     } catch (error) {
-    //         return {error: error}
-    //     }
-    // }
-
-    // creates cart and adds products
+    // Creates cart with the given products
     async create(products){
-
-        // let cartID
-
-        // try {
-		// 	cartID = await cartsModel.find().sort({cartID:-1}).limit(1)
-		// 	cartID = cartID[0] ? cartID[0].cartID + 1 : 1
-		// } catch (error) {
-		// 	return {error: error}
-		// } 
-
         try {
             return await cartsModel.create({products})
-            //return cartID
         } catch (error) {
             return {error: error}
         }
@@ -65,6 +45,7 @@ export class cartsMongoDAO{
         }
     }
 
+    // Deletes cart with ID cid
     async delete(cid){
         try {
             return await cartsModel.updateOne({_id: cid}, {isDeleted: true})

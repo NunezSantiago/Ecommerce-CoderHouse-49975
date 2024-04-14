@@ -1,13 +1,3 @@
-// export class customError{
-
-//     constructor(){}
-
-//     static customError(name, message, statusCode, internalCode, description=""){
-//         let error={name, message, statusCode, internalCode, description}
-//         return error
-//     }
-// }
-
 import os from 'os'
 
 export class customError{

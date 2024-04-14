@@ -1,24 +1,5 @@
 import os from 'os'
 
-// export const productArgsError = (product) => {
-//     return `
-//         Argument error.
-//         Mandatory arguments:
-//         - name: String | received ${product.name}
-//         - code: String | received ${product.code}
-//         - description: String | received ${product.description}
-//         - category: String | received ${product.category}
-//         - price: Number | received ${product.price}
-//         - stock: Number | received ${product.stock}
-//         Optional arguments
-//         - status: Boolean (default True) | received ${product.status}
-//         - thumbnails: Array (default []) | received ${product.thumbnails}
-
-//         Date: ${new Date().toUTCString()}
-//         User: ${os.userInfo().username}
-//     `
-// }
-
 export class productErrors{
     constructor(){}
 

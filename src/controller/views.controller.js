@@ -1,9 +1,8 @@
-//import { productsController } from '../controller/products.controller.js'
-//import { cartsController } from '../controller/carts.controller.js'
 import { productsService } from '../services/products.service.js'
 import { cartsService } from '../services/carts.service.js'
 import { usersService } from '../services/user.service.js'
 
+// Used to control which options are displated depending if there is an active session or not.
 const currentUser = (session) => {
     return {
         activeSession: session.user ? true : false,
@@ -20,10 +19,7 @@ export class viewsController{
         res.redirect('/products')
     }
 
-    static async products(req, res){
-    
-        //res.setHeader('Content-Type', 'text/html')
-        
+    static async products(req, res){        
         let {limit, page, query, sort} = req.query
 
         let conf = {
@@ -48,10 +44,6 @@ export class viewsController{
         let { totalPages, hasPrevPage, hasNextPage, prevPage, nextPage } = products
 
         let user = req.session.user
-
-        //let user = req.session.user
-
-        //console.log( totalPages, hasPrevPage, hasNextPage, prevPage, nextPage )
 
         return res.status(200).render('products', {currentUser: currentUser(req.session), cartID: user.cart, products: products.docs, totalPages, hasPrevPage, hasNextPage, prevPage, nextPage, limit, title:'Products'})
         
@@ -139,7 +131,6 @@ export class viewsController{
 
     static async users(req, res){
         let users = await usersService.getUsers()
-        //let displayUsersOption = req.session.user && req.session.user.role == "Admin"
         res.setHeader('Content-Type', 'text/html')
         res.status(200).render('users', {currentUser: currentUser(req.session), users})
     }
@@ -150,8 +141,6 @@ export class viewsController{
 
         let isUserNotAdmin = user.role != "Admin"
         let isUserPremium = user.role == "Premium"
-
-        //console.log(user)
 
         res.setHeader('Content-Type', 'text/html')
         res.status(200).render('user', {currentUser: currentUser(req.session), user, isUserNotAdmin, isUserPremium})

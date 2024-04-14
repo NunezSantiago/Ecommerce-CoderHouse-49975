@@ -4,6 +4,10 @@ import { ticketsService } from "../services/ticket.service.js";
 import { sendEmail } from "../mails/mail.js"
 import { usersService } from "../services/user.service.js";
 
+import { customError } from "../utils/customErrors.js";
+import { STATUS_CODES } from "../utils/errorCodes.js";
+import { INTERNAL_CODES } from "../utils/errorCodes.js";
+
 export class cartsController{
 
     constructor(){}
@@ -14,7 +18,9 @@ export class cartsController{
         let carts = await cartsService.getCarts()
 
         if(carts.error){
-            return res.status(400).json({error: carts.error.message})
+            let error = customError.customError("Database unexpected error", carts.error.message, STATUS_CODES.SERVER_ERROR, INTERNAL_CODES.DATABASE, "Database unexpected error, please, retry later")
+            req.logger.error(error)
+            return res.status(error.statusCode).json(error)
         } else{
             return res.status(200).json(carts)
         }
@@ -30,19 +36,19 @@ export class cartsController{
 
         if(cart){
             if(cart.error){
-                return res.status(500).json({error: cart.error.message})
+                let error = customError.customError("Database unexpected error", cart.error.message, STATUS_CODES.SERVER_ERROR, INTERNAL_CODES.DATABASE, "Database unexpected error, please, retry later")
+                req.logger.error(error)
+                return res.status(error.statusCode).json(error)
             } else{
+                req.logger.info({message: "Cart retrieved successfully", cart})
                 return res.status(200).json(cart)
             }
         } else{
-            return res.status(404).json({error: `Could not find cart with ID ${cartId}`})
+            let error = customError.customError("Not found", `Cart with ID ${cartId} not found`, STATUS_CODES.NOT_FOUND, INTERNAL_CODES.ARGUMENTS, `Cart with ID ${cartId} not found`)
+            req.logger.error(error)
+            return res.status(error.statusCode).json(error)
         }
 
-        // if(cart.error){
-        //     return res.status(400).json({error: cart.error.message})
-        // } else{
-        //     return res.status(200).json(cart)
-        // }
     }
 
     static async createCart(req, res){
@@ -57,7 +63,9 @@ export class cartsController{
             let availableProducts = await productsService.getAllProducts()
         
             if(availableProducts.error){
-                return res.status(400).json({error: availableProducts.error.message})
+                let error = customError.customError("Database unexpected error", availableProducts.error.message, STATUS_CODES.SERVER_ERROR, INTERNAL_CODES.DATABASE, "Database unexpected error, please, retry later")
+                req.logger.error(error)
+                return res.status(error.statusCode).json(error)
             }
 
             let productsIds = availableProducts.map(product => product._id.toString())
@@ -72,8 +80,11 @@ export class cartsController{
         let newCart = await cartsService.createCart(cart)
 
         if(newCart.error){
-            return res.status(500).json({error: newCart.error.message})
+            let error = customError.customError("Database unexpected error", newCart.error.message, STATUS_CODES.SERVER_ERROR, INTERNAL_CODES.DATABASE, "Database unexpected error, please, retry later")
+            req.logger.error(error)
+            return res.status(error.statusCode).json(error)
         } else{
+            req.logger.info({message: "Cart created successfully", cartID: newCart._id})
             res.status(201).json({message: "Cart added successfully", cartID: newCart._id})
         }
     }
@@ -88,8 +99,6 @@ export class cartsController{
         let quantity = (req.body.quantity && !isNaN(req.body.quantity)) ? req.body.quantity : 1
         quantity = parseInt(quantity)
 
-        //console.log(quantity)
-
         let existCart = await cartsService.getCartByID(cartId)
         let existProduct = await productsService.getProductByID(productId)
 
@@ -102,13 +111,10 @@ export class cartsController{
         if(existCart && !existCart.error){
             if(existProduct && !existProduct.error){
 
-                //Both cart and products exist
-
                 let cart = existCart.products
                 let productinCart = false
                 
                 for(let prod of cart){
-                    //console.log(prod)
                     if(prod.product._id == productId){
                         prod.quantity+=quantity
                         productinCart = true
@@ -127,16 +133,23 @@ export class cartsController{
                 let updatedCart = await cartsService.updateCart(cartId, cart)
 
                 if(updatedCart.error){
-                    return res.status(400).json({error: updatedCart.error.message})
+                    let error = customError.customError("Database unexpected error", newCart.error.message, STATUS_CODES.SERVER_ERROR, INTERNAL_CODES.DATABASE, "Database unexpected error, please, retry later")
+                    req.logger.error(error)
+                    return res.status(error.statusCode).json(error)
                 } else{
-                    return res.status(200).json(`Successfully added product ${productId} to cart ${cartId}`)
+                    req.logger.info({message: `Successfully added product ${productId} to cart ${cartId}`})
+                    return res.status(201).json({message: `Successfully added product ${productId} to cart ${cartId}`})
                 }
 
             } else{
-                return res.status(404).json({error: `Could not find product with ID ${productId}`})
+                let error = customError.customError("Not found", `Product with ID ${productId} not found`, STATUS_CODES.NOT_FOUND, INTERNAL_CODES.ARGUMENTS, `Product with ID ${productId} not found`)
+                req.logger.error(error)
+                return res.status(error.statusCode).json(error)
             }
         } else{
-            return res.status(404).json({error: `Could not find cart with ID ${cartId}`})
+            let error = customError.customError("Not found", `Cart with ID ${cartId} not found`, STATUS_CODES.NOT_FOUND, INTERNAL_CODES.ARGUMENTS, `Cart with ID ${cartId} not found`)
+            req.logger.error(error)
+            return res.status(error.statusCode).json(error)
         }
 
     }
@@ -165,18 +178,23 @@ export class cartsController{
                     let updatedCart = cartsService.updateCart(cartId, newCart)
                     
                     if(updatedCart.error){
-                        return res.status(500).json({error: updatedCart.error.message})
+                        let error = customError.customError("Database unexpected error", newCart.error.message, STATUS_CODES.SERVER_ERROR, INTERNAL_CODES.DATABASE, "Database unexpected error, please, retry later")
+                        req.logger.error(error)
+                        return res.status(error.statusCode).json(error)
                     } else{
-                        return res.status(200).json(`Successfully deleted product ${productId} to cart ${cartId}`)
+                        req.logger.info({message: `Successfully deleted product ${productId} to cart ${cartId}`})
+                        return res.status(201).json({message: `Successfully deleted product ${productId} to cart ${cartId}`})
                     }
-
                 }
-
             } else{
-                return res.status(404).json({error: `Could not find product with ID ${productId}`})
+                let error = customError.customError("Not found", `Product with ID ${productId} not found`, STATUS_CODES.NOT_FOUND, INTERNAL_CODES.ARGUMENTS, `Product with ID ${productId} not found`)
+                req.logger.error(error)
+                return res.status(error.statusCode).json(error)
             }
         } else{
-            return res.status(404).json({error: `Could not find cart with ID ${cartId}`})
+            let error = customError.customError("Not found", `Cart with ID ${cartId} not found`, STATUS_CODES.NOT_FOUND, INTERNAL_CODES.ARGUMENTS, `Cart with ID ${cartId} not found`)
+            req.logger.error(error)
+            return res.status(error.statusCode).json(error)
         }
 
     }
@@ -232,6 +250,12 @@ export class cartsController{
 
                 let result = await ticketsService.createTicket({code, purchase_datetime, amount, purchaser})
 
+                if(result.error){
+                    let error = customError.customError("Database unexpected error", newCart.error.message, STATUS_CODES.SERVER_ERROR, INTERNAL_CODES.DATABASE, "Database unexpected error, please, retry later")
+                    req.logger.error(error)
+                    return res.status(error.statusCode).json(error)
+                }
+
                 let newCart = cart
 
                 let availableIDs = available.map(avail => avail.product._id)
@@ -245,17 +269,20 @@ export class cartsController{
                 let updateCart = await cartsService.updateCart(cartId, newCart.products)
                 
                 available.forEach(async prod => {
-                    //prod.product.stock-=prod.quantity
                     await productsService.updateProduct(prod.product._id, {stock: prod.product.stock - prod.quantity})
                 })
 
+                req.logger.info({message: "Purchase completed successfully", ticket: result})
                 res.status(200).json({message: "Purchase completed successfully", ticket: result})
             } else{
-                res.status(200).json("None of the selected products were available for purchase")
+                req.logger.info({message: "Purchase was completed, but none of the selected products were available for purchase"})
+                res.status(200).json({message: "Purchase was completed, but none of the selected products were available for purchase"})
             }
 
         } else{
-            return res.status(404).json({error: `Could not find cart with ID ${cartId}`})
+            let error = customError.customError("Not found", `Cart with ID ${cartId} not found`, STATUS_CODES.NOT_FOUND, INTERNAL_CODES.ARGUMENTS, `Cart with ID ${cartId} not found`)
+            req.logger.error(error)
+            return res.status(error.statusCode).json(error)
         }
     }
 }

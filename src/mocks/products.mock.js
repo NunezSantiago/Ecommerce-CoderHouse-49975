@@ -44,8 +44,6 @@ export class productsMock{
             })
         }
 
-        console.log(products)
-
         return products
     }
 }

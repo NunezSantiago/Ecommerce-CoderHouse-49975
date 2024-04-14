@@ -13,7 +13,6 @@ const isAdmin = (req, res, next) => {
 }
 
 router.get('/', usersController.getUsers) // Get all users
-//router.get('/:email', usersController.getUserByEmail)
 
 router.post('/', usersController.createUser) // Create one user
 router.post('/premium/:uid', usersController.updateRole)

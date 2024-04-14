@@ -1,9 +1,3 @@
-/*
-    _id main id
-    products - products in the cart {prod id, quantity}
-    isDeleted
-*/
-
 export class cartsMemoryDAO{
     constructor(){
         this.carts = [
@@ -50,10 +44,6 @@ export class cartsMemoryDAO{
         return this.carts.find(cart => cart._id == cid && !cart.isDeleted)
     }
 
-    // async getByCartID(cid){
-    //     return this.carts.find(cart => cart.cartId = cid)
-    // }
-
     async create(products){
         let cartID = 1
 
@@ -77,44 +67,12 @@ export class cartsMemoryDAO{
 
     async update(cid, products){
 
-        //console.log(cid)
-
         cid = parseInt(cid)
-
-        //console.log(products)
         
         let indexOfCart = this.carts.findIndex(cart => cart._id == cid)
 
-        // if(products.length > 1){
-        //     let newProduct = products[products.length - 1]
-
-        //     for(let i = 0; i < products.length - 1; i++){
-        //         if(products[i].product == newProduct.product){
-        //             products[i].quantity+=newProduct.quantity
-        //             products.splice(products.length - 1, 1)
-        //             break
-        //         }
-        //     }
-
-        //     // for(let prod of products){
-        //     //     if(prod.product == newProduct.product){
-        //     //         prod.quantity+=newProduct.quantity
-        //     //         products.splice(products.length - 1, 1)
-        //     //         break
-        //     //     }
-        //     // }
-        // }
-
-        //console.log(products)
-
-        
-
-        //console.log(indexOfCart)
-
         this.carts[indexOfCart].products = products
         this.carts[indexOfCart].updatedAt = new Date()
-
-        //console.log(this.carts[indexOfCart])
 
         return this.carts[indexOfCart]
     }

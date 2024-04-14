@@ -1,6 +1,6 @@
 // Utilities
 import __dirname from './utils.js'; //Utils
-//import { errorHandler } from './middlewares/errorHandler.js';
+import { config } from './config/config.js';
 import { winstonLogger } from './middlewares/winstonLogger.js';
 
 // Express
@@ -8,6 +8,7 @@ import express from 'express'
 import {engine} from 'express-handlebars'
 import sessions from 'express-session'
 
+// Routers
 import { router as usersRouter } from './routes/users.router.js'
 import { router as productsRouter } from './routes/products.router.js';
 import { router as cartsRouter } from './routes/carts.router.js';
@@ -16,18 +17,13 @@ import { router as sessionsRouter } from './routes/session.router.js';
 import { router as mocksRouter } from './routes/mocks.router.js';
 import { router as loggerTestRouter } from './routes/loggerTest.router.js';
 
-import { config } from './config/config.js';
 
 // Mongo
-//import mongoose from 'mongoose' //mongoose
 import MongoStore from 'connect-mongo';
 
 //Passport
 import { passportInit } from './config/config.passport.js';
 import passport from 'passport';
-
-//Swagger
-//import * as swaggerUi from 'swagger-ui-express'
 
 import {serve, setup} from 'swagger-ui-express'
 import { swagger_specs } from './config/config.js';
@@ -59,7 +55,6 @@ app.use(sessions({
 }))
 
 //Swagger configuration
-
 app.use("/api-docs", serve, setup(swagger_specs))
 
 // Set routers
@@ -75,7 +70,6 @@ app.use('/', viewsRouter)
 passportInit()
 app.use(passport.initialize())
 app.use(passport.session())
-
 
 // Server connection
 const server = app.listen(PORT, async ()=>{

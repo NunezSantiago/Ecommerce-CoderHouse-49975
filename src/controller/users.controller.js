@@ -52,13 +52,9 @@ export class usersController {
 
         let userCart = await cartsService.createCart([])
 
-        console.log(userCart)
-
         password = createHash(password)
 
         let newUser = await usersService.createUser({ cart: userCart._id, first_name, last_name, email, password, role })
-
-        console.log(newUser)
 
         if(newUser.error){
             return res.status(400).json({error: newUser.error.message})
@@ -68,8 +64,6 @@ export class usersController {
     }
 
     static async updateRole(req, res){
-
-        console.log("Entro")
         
         let uid = req.params.uid
         let user = await usersService.getUserByID(uid)

@@ -9,8 +9,6 @@ export class ticketsMemoryDAO{
 
     async create(ticket){
 
-        //console.log(ticket)
-
         let ticketID = 1
 
         if(this.tickets.length != 0){
@@ -21,8 +19,6 @@ export class ticketsMemoryDAO{
         ticket.isDeleted = false
         ticket.createdAt = new Date()
         ticket.updatedAt = new Date()
-
-        //console.log(ticket)
 
         this.tickets.push(ticket)
     }

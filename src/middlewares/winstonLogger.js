@@ -13,13 +13,7 @@ const logger = winston.createLogger({
     transports: []
 })
 
-// const transports = () => {
-
-//     let transport = []
-
 if(config.MODE === "Production"){
-
-    //console.log("ENTRO")
 
     logger.add(
         new winston.transports.Console({
@@ -69,10 +63,6 @@ if(config.MODE === "Production"){
         })
     )
 }
-
-    //return transport
-
-//}
 
 export const winstonLogger = (req, res, next) => {
     req.logger = logger

@@ -3,7 +3,7 @@ import { cartsController } from "../controller/carts.controller.js";
 
 export const router = Router()
 
-// Middlewars
+// Middlewares
 
 const ownCart = (req, res, next) => {
     if(!req.session.user){

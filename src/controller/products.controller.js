@@ -2,7 +2,6 @@ import { productsService } from "../services/products.service.js";
 import { customError } from "../utils/customErrors.js";
 import { STATUS_CODES } from "../utils/errorCodes.js";
 import { INTERNAL_CODES } from "../utils/errorCodes.js";
-//import { productArgsError } from "../utils/products.errors.js";
 import { productErrors } from "../utils/products.errors.js";
 import { sendEmail } from "../mails/mail.js"
 import { usersService } from "../services/user.service.js";
@@ -39,21 +38,13 @@ export class productsController{
         if(products.error){
             let error = customError.customError("Database unexpected error", products.error.message, STATUS_CODES.SERVER_ERROR, INTERNAL_CODES.DATABASE, "Database unexpected error, please, retry later")
             req.logger.error(error)
-            //throw error
             return res.status(error.statusCode).json(error)
         } else{
-            //console.log(products)
             return res.status(200).json(products)
         }
     } // End Get
 
-    // static async getProductByID(req, res){
-
-    // }
-
     static async createProduct(req, res){
-
-        //res.setHeader("Content-Type", "application/json");
 
         let { title, description, code, price, stock, category, status, thumbnails } = req.body
 
@@ -102,8 +93,6 @@ export class productsController{
 
         let newProduct = await productsService.createProduct(product)
 
-        //console.log(newProduct.error)
-
         if(newProduct.error){
             let error = customError.customError("Database unexpected error", newProduct.error.message, STATUS_CODES.SERVER_ERROR, INTERNAL_CODES.DATABASE, "Database unexpected error, please, retry later")
             req.logger.error(error)
@@ -126,12 +115,7 @@ export class productsController{
             let error = customError.customError("Product not found", `Unable to find product with ID ${id}`, STATUS_CODES.NOT_FOUND, INTERNAL_CODES.DATABASE, productErrors.productIDNotFound(id))
             req.logger.error(error)
             return res.status(error.statusCode).json(error)
-            //throw error
-            //return res.status(400).json({error: `Unable to find product with ID ${id}`})
         }
-
-        // console.log(exist)
-        // console.log(req.session.user)
 
         if(req.session.user.role == "Premium" && exist.owner != req.session.user.email){
             let error = customError.customError("Cannot edit product", `Premium users can only edit products owned by them`, STATUS_CODES.ERROR_AUTORIZACION, INTERNAL_CODES.PERMISSIONS, `Cannot edit product with id ${id}`)
@@ -184,8 +168,6 @@ export class productsController{
             if(Object.keys(params).length !== 0){
                 updatedProduct = await productsService.updateProduct(id, params)
 
-                //console.log(params)
-
                 if(updatedProduct.error){
                     let error = customError.customError("Database unexpected error", updatedProduct.error.message, STATUS_CODES.ERROR_ARGUMENTOS, INTERNAL_CODES.DATABASE, "Database unexpected error, please, retry later")
                     req.logger.error(error)
@@ -194,9 +176,6 @@ export class productsController{
                     req.logger.info("Product updated successfully")
                     return res.status(200).json({message: 'Product successfully updated'})
                 }
-
-                //console.log(updatedProduct)
-
             }
 
             if(priceNaN || stockNaN || repeatedCode){
@@ -219,12 +198,8 @@ export class productsController{
                 }
 
                 let error = customError.customError("Partial success", `Unable to update wrongly formated inputs`, STATUS_CODES.ERROR_ARGUMENTOS, INTERNAL_CODES.ARGUMENTS, argumentsError)
-
                 req.logger.error(error)
-
                 return res.status(error.statusCode).json(error)
-
-                //return res.status(400).json(error)
             }
         }
 
@@ -233,10 +208,6 @@ export class productsController{
         req.logger.error(error)
 
         return res.status(error.statusCode).json(error)
-
-        //return res.status(400).json({error: "No modifiable values provided"})
-
-
     }
 
     static async deleteProduct(req, res){
