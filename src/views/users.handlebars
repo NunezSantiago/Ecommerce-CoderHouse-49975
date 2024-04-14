@@ -1,0 +1,13 @@
+<h1>Users - Admin only</h1>
+
+<div id="users">
+    {{#each users}}
+        <div id="{{_id}}">
+            <a href="/user/{{_id}}">{{first_name}} {{last_name}}</a>
+            <p>{{email}}</p>
+            <p>{{role}}</p>
+        </div>
+
+        <hr>
+    {{/each}}
+</div>

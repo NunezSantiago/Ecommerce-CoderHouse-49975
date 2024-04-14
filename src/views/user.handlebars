@@ -1,0 +1,32 @@
+<h1>{{user.first_name}} {{user.last_name}}</h1>
+
+<div id="{{user._id}}">
+    <p>Email: {{user.email}}</p>
+    <p>Age: {{user.age}}</p>
+    <div>
+        <p>Current role: {{user.role}}</p>
+        {{#if isUserNotAdmin}}
+            {{#if isUserPremium}}
+                <p>Change role to User</p>
+            {{else}}
+                <p>Change role to Premium</p>
+            {{/if}}
+
+        <form action="/api/users/premium/{{user._id}}" method="post">
+        <input type="submit" value="Change role">
+        </form>
+        {{/if}}
+    </div>
+    <p>CartID: {{user.cart}}</p>
+    <div>
+        <h2>Documents</h5>
+        {{#each user.documents}}
+        <ul>
+            <li>{{name}}</li>
+        </ul>
+        {{/each}}
+    </div>
+    <form action="/api/users/{{user._id}}/delete" method="post">
+    <input type="submit" value="Delete user">
+    </form>
+</div>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+</head>
+<body>
+    {{#if currentUser.activeSession}}
+        <a href="/products">Products</a>
+        <a href="/profile">Profile</a>
+        <a href="/api/sessions/logout">Log out</a>
+        <a href="/cart/{{currentUser.cartID}}">My cart</a>
+        {{#if currentUser.isAdmin}}
+            <a href="/users">Users</a>
+        {{/if}}
+    {{else}}
+        <a href="/login">Log in</a>
+        <a href="/register">Register</a>
+        <a href="/pwdReset">Password reset</a>
+    {{/if}}
+    
+    
+    
+    
+    
+    
+    
+    <a href=""></a>
+
+    {{{body}}}
+</body>
+</html>
