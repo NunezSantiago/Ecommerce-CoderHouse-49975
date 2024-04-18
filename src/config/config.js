@@ -24,6 +24,7 @@ export const swagger_specs = swaggerJSDoc(options)
 
 export const config={
     PORT: process.env.PORT || 8080,
+    RAILWAY_PUBLIC_DOMAIN: process.env.RAILWAY_PUBLIC_DOMAIN,
     MONGO_URL: process.env.MONGO_URL,
     DBNAME: process.env.DBNAME,
     SECRETKEY: process.env.SECRETKEY,

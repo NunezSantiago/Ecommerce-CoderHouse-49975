@@ -136,7 +136,7 @@ export class usersController {
 
         let token = jwt.sign({...userDTO}, config.SECRETKEY, {expiresIn:"1h"})
 
-        let message = `Hey ${user.first_name}, you can reset your password clicking this button: <a href="http://localhost:${config.PORT}/api/users/pwdReset02?token=${token}">Reset Password</a>`
+        let message = `Hey ${user.first_name}, you can reset your password clicking this button: <a href="https://${config.RAILWAY_PUBLIC_DOMAIN}/api/users/pwdReset02?token=${token}">Reset Password</a>`
 
         let response = await sendEmail(email, "Password reset request", message)
 
