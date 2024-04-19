@@ -2,7 +2,7 @@ import { productsService } from '../services/products.service.js'
 import { cartsService } from '../services/carts.service.js'
 import { usersService } from '../services/user.service.js'
 
-// Used to control which options are displated depending if there is an active session or not.
+// Used to control which options are displayed depending if there is an active session or not.
 const currentUser = (session) => {
     return {
         activeSession: session.user ? true : false,
@@ -57,8 +57,6 @@ export class viewsController{
         let product = await productsService.getProductByID(id)
 
         let user = req.session.user
-
-        console.log(product)
 
         return res.status(200).render('product', {currentUser: currentUser(req.session), cartID: user.cart, product, title: product.title})
     }
