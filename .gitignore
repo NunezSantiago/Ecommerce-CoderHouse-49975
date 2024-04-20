@@ -1,3 +1,4 @@
 /node_modules
 /.sfdx
 /src/.env
+/src/user_files

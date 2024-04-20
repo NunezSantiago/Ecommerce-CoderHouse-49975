@@ -33,7 +33,7 @@ export class productsMock{
             products.push({
                 _id: i,
                 code: faker.string.alphanumeric(8) + i,
-                name: faker.commerce.productName(),
+                title: faker.commerce.productName(),
                 description: faker.commerce.productDescription(),
                 category: faker.commerce.department(),
                 price: parseFloat(faker.commerce.price()),

@@ -44,6 +44,25 @@ export class productsController{
         }
     } // End Get
 
+    static async getProduct(req, res){
+        let pid = req.params.pid
+        let product = await productsService.getProductByID(pid)
+        if(product){
+            if(product.error){
+                let error = customError.customError("Database unexpected error", product.error.message, STATUS_CODES.SERVER_ERROR, INTERNAL_CODES.DATABASE, "Database unexpected error, please, retry later")
+                req.logger.error(error)
+                return res.status(error.statusCode).json(error)
+            } else{
+                req.logger.info({message: "Product retrieved successfully", payload: product})
+                return res.status(200).json(product)
+            }
+        } else {
+            let error = customError.customError("Not found", `Product with ID ${pid} not found`, STATUS_CODES.NOT_FOUND, INTERNAL_CODES.ARGUMENTS, `Product with ID ${pid} not found`)
+            req.logger.error(error)
+            return res.status(error.statusCode).json(error)
+        }
+    }
+
     static async createProduct(req, res){
 
         let { title, description, code, price, stock, category, status, thumbnails } = req.body
@@ -99,7 +118,7 @@ export class productsController{
             return res.status(error.statusCode).json(error)
         } else {
             req.logger.info("Product created successfully")
-            return res.status(201).send('Product successfully created')
+            return res.status(201).json({message: 'Product successfully created', payload: newProduct})
         }
     } // End create
 
